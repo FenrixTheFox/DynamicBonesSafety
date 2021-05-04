@@ -61,7 +61,7 @@ namespace DynamicBonesSafety
             if (__instance == VRCPlayer.field_Internal_Static_VRCPlayer_0)
                 return;
 
-            APIUser apiUser = __instance.field_Private_Player_0.field_Private_APIUser_0;
+            APIUser apiUser = __instance._player.field_Private_APIUser_0;
 
             if (apiUser == null)
                 return;
@@ -100,7 +100,10 @@ namespace DynamicBonesSafety
 
         private static bool IsAvatarExplicityShown(string userId)
         {
-            foreach (var playerModeration in ModerationManager.prop_ModerationManager_0.field_Private_List_1_ApiPlayerModeration_0)
+            if (!ModerationManager.prop_ModerationManager_0.field_Private_Dictionary_2_String_List_1_ApiPlayerModeration_0.ContainsKey(userId))
+                return false;
+
+            foreach (var playerModeration in ModerationManager.prop_ModerationManager_0.field_Private_Dictionary_2_String_List_1_ApiPlayerModeration_0[userId])
             {
                 if (playerModeration.moderationType == ApiPlayerModeration.ModerationType.ShowAvatar && playerModeration.targetUserId == userId)
                 {
