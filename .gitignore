@@ -3,3 +3,4 @@ obj/
 .vs/
 Libs/*.dll
 *.sln
+/Libs

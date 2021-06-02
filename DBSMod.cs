@@ -2,6 +2,7 @@
 using MelonLoader;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,7 +13,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 [assembly: MelonGame("VRChat", "VRChat")]
-[assembly: MelonInfo(typeof(DBSMod), "Dynamic Bones Safety", "2.1.0", "Fenrix")]
+[assembly: MelonInfo(typeof(DBSMod), "Dynamic Bones Safety", "2.1.1", "Fenrix")]
 
 namespace DynamicBonesSafety
 {
@@ -42,11 +43,15 @@ namespace DynamicBonesSafety
 
             _cachedSelectedSafetyClass = typeof(VRCUiPageSafety).GetProperties().Where(prop => prop.PropertyType.IsEnum).First().GetGetMethod();
             ModPatches.DoPatch(Harmony);
+
+            MelonCoroutines.Start(WaitForUiManagerInit());
         }
 
-        public override void VRChat_OnUiManagerInit()
+        private IEnumerator WaitForUiManagerInit()
         {
-            GameObject SafetyUiMenu = GameObject.Find("UserInterface/MenuContent/Screens/Settings_Safety");
+            while (VRCUiManager.prop_VRCUiManager_0 == null) yield return null;
+
+             GameObject SafetyUiMenu = GameObject.Find("UserInterface/MenuContent/Screens/Settings_Safety");
             _cachedPageSafety = SafetyUiMenu.GetComponent<VRCUiPageSafety>();
 
             Transform SafetyMatrixTogglesTransform = GameObject.Find("UserInterface/MenuContent/Screens/Settings_Safety/_SafetyMatrix/_Toggles").transform;
