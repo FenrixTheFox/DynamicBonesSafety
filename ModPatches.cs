@@ -61,7 +61,7 @@ namespace DynamicBonesSafety
             if (__instance == VRCPlayer.field_Internal_Static_VRCPlayer_0)
                 return;
 
-            APIUser apiUser = __instance._player.field_Private_APIUser_0;
+            APIUser apiUser = __instance._player.prop_APIUser_0;
 
             if (apiUser == null)
                 return;
