@@ -13,7 +13,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 [assembly: MelonGame("VRChat", "VRChat")]
-[assembly: MelonInfo(typeof(DBSMod), "Dynamic Bones Safety", "2.1.2", "Fenrix")]
+[assembly: MelonInfo(typeof(DBSMod), "Dynamic Bones Safety", "2.1.3", "Fenrix")]
 
 namespace DynamicBonesSafety
 {

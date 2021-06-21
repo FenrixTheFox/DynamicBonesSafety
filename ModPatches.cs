@@ -29,9 +29,10 @@ namespace DynamicBonesSafety
                 .Where(m => m.Name.StartsWith($"Method_Public_Boolean_{PermissionType.Name}")))
                 instance.Patch(IsPermissionEnabled, GetPatch(nameof(IsPermissionEnabled)));
 
-            foreach (MethodInfo AvatarFinishedLoading in typeof(VRCPlayer).GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                .Where(m => m.Name.StartsWith("Method_Private_Void_GameObject_VRC_AvatarDescriptor_Boolean_") && !checkXref(m, "Avatar is Ready, Initializing")))
-                instance.Patch(AvatarFinishedLoading, null, GetPatch(nameof(AvatarFinishedLoadingPostfix)));
+            instance.Patch(typeof(VRCPlayer).GetMethod(nameof(VRCPlayer.Awake)), postfix: GetPatch(nameof(VRCPlayerAwakePostfix)));
+            //foreach (MethodInfo AvatarFinishedLoading in typeof(VRCPlayer).GetMethods(BindingFlags.Public | BindingFlags.Instance)
+            //    .Where(m => m.Name.StartsWith("Method_Private_Void_GameObject_VRC_AvatarDescriptor_Boolean_") && !checkXref(m, "Avatar is Ready, Initializing")))
+            //    instance.Patch(AvatarFinishedLoading, null, GetPatch(nameof(AvatarFinishedLoadingPostfix)));
 
             GetUserSocialRank = typeof(FeaturePermissionManager).GetMethods().Where(m => m.ReturnType.IsEquivalentTo(DBSMod._cachedSelectedSafetyClass.ReturnType) && !m.Name.Contains("_PDM_"))
                 .Where(m => m.GetCustomAttribute<CallerCountAttribute>().Count != 0)
@@ -50,47 +51,56 @@ namespace DynamicBonesSafety
             return false;
         }
 
-        private static void AvatarFinishedLoadingPostfix(VRCPlayer __instance, GameObject __0, VRC_AvatarDescriptor __1, bool __2)
+        private static void VRCPlayerAwakePostfix(VRCPlayer __instance)
         {
-            if (__instance == null
-                || __0 == null
-                || __1 == null
-                || !__2)
+            if (__instance == null)
                 return;
 
-            if (__instance == VRCPlayer.field_Internal_Static_VRCPlayer_0)
-                return;
+            __instance.Method_Public_add_Void_MulticastDelegateNPublicSealedVoUnique_0(new Action(() =>
+             {
+                 var player = __instance._player;
+                 if (player == null) return;
 
-            APIUser apiUser = __instance._player.prop_APIUser_0;
+                 var avatarManager = __instance.prop_VRCAvatarManager_0;
+                 if (avatarManager == null) return;
 
-            if (apiUser == null)
-                return;
+                 if (__instance._player.field_Private_APIUser_0 != null)
+                 {
+                     if (__instance == VRCPlayer.field_Internal_Static_VRCPlayer_0)
+                         return;
 
-            if (IsAvatarExplicityShown(apiUser.id))
-                return;
+                     APIUser apiUser = __instance._player.prop_APIUser_0;
 
-            string selectedTrust = GetUserTrustRank(apiUser);
+                     if (apiUser == null)
+                         return;
 
-            if (DBSMod.CanUseBones.ContainsKey(selectedTrust.ToString()))
-            {
-                if (!DBSMod.CanUseBones[selectedTrust.ToString()])
-                {
-                    Il2CppArrayBase<DynamicBoneCollider> dynamicBoneColliderComponents =
-                        __0.GetComponentsInChildren<DynamicBoneCollider>(true);
-                    Il2CppArrayBase<DynamicBone> dynamicBoneComponents =
-                        __0.GetComponentsInChildren<DynamicBone>(true);
+                     if (IsAvatarExplicityShown(apiUser.id))
+                         return;
 
-                    foreach (DynamicBoneCollider dynamicBoneCollider in dynamicBoneColliderComponents)
-                    {
-                        GameObject.DestroyImmediate(dynamicBoneCollider, true);
-                    }
+                     string selectedTrust = GetUserTrustRank(apiUser);
 
-                    foreach (DynamicBone dynamicBone in dynamicBoneComponents)
-                    {
-                        GameObject.DestroyImmediate(dynamicBone, true);
-                    }
-                }
-            }
+                     if (DBSMod.CanUseBones.ContainsKey(selectedTrust.ToString()))
+                     {
+                         if (!DBSMod.CanUseBones[selectedTrust.ToString()])
+                         {
+                             Il2CppArrayBase<DynamicBoneCollider> dynamicBoneColliderComponents =
+                                 avatarManager.prop_GameObject_0.GetComponentsInChildren<DynamicBoneCollider>(true);
+                             Il2CppArrayBase<DynamicBone> dynamicBoneComponents =
+                                 avatarManager.prop_GameObject_0.GetComponentsInChildren<DynamicBone>(true);
+
+                             foreach (DynamicBoneCollider dynamicBoneCollider in dynamicBoneColliderComponents)
+                             {
+                                 GameObject.DestroyImmediate(dynamicBoneCollider, true);
+                             }
+
+                             foreach (DynamicBone dynamicBone in dynamicBoneComponents)
+                             {
+                                 GameObject.DestroyImmediate(dynamicBone, true);
+                             }
+                         }
+                     }
+                 }
+             }));
         }
 
         private static string GetUserTrustRank(APIUser apiUser)
