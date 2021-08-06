@@ -1,5 +1,4 @@
-﻿using Harmony;
-using MelonLoader;
+﻿using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +20,7 @@ namespace DynamicBonesSafety
     {
         private static MethodInfo GetUserSocialRank = null;
 
-        public static void DoPatch(HarmonyInstance instance)
+        public static void DoPatch(HarmonyLib.Harmony instance)
         {
             Type PermissionType = typeof(FeaturePermissionSet).GetNestedTypes()[0];
 
@@ -113,7 +112,7 @@ namespace DynamicBonesSafety
             if (!ModerationManager.prop_ModerationManager_0.field_Private_Dictionary_2_String_List_1_ApiPlayerModeration_0.ContainsKey(userId))
                 return false;
 
-            foreach (var playerModeration in ModerationManager.prop_ModerationManager_0.field_Private_Dictionary_2_String_List_1_ApiPlayerModeration_0[userId])
+            foreach (var playerModeration in ModerationManager.prop_ModerationManager_0.field_Private_Dictionary_2_String_List_1_ApiPlayerModeration_0.[userId])
             {
                 if (playerModeration.moderationType == ApiPlayerModeration.ModerationType.ShowAvatar && playerModeration.targetUserId == userId)
                 {

@@ -13,7 +13,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 [assembly: MelonGame("VRChat", "VRChat")]
-[assembly: MelonInfo(typeof(DBSMod), "Dynamic Bones Safety", "2.1.3", "Fenrix")]
+[assembly: MelonInfo(typeof(DBSMod), "Dynamic Bones Safety", "2.1.4", "Fenrix")]
 
 namespace DynamicBonesSafety
 {
@@ -42,7 +42,7 @@ namespace DynamicBonesSafety
             }
 
             _cachedSelectedSafetyClass = typeof(VRCUiPageSafety).GetProperties().Where(prop => prop.PropertyType.IsEnum).First().GetGetMethod();
-            ModPatches.DoPatch(Harmony);
+            ModPatches.DoPatch(HarmonyInstance);
 
             MelonCoroutines.Start(WaitForUiManagerInit());
         }
