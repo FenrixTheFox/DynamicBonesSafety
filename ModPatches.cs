@@ -55,7 +55,7 @@ namespace DynamicBonesSafety
             if (__instance == null)
                 return;
 
-            __instance.Method_Public_add_Void_MulticastDelegateNPublicSealedVoUnique_0(new Action(() =>
+            __instance.Method_Public_add_Void_OnAvatarIsReady_0(new Action(() =>
              {
                  var player = __instance._player;
                  if (player == null) return;
