@@ -12,8 +12,11 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+using VRCUiPageSafety = MonoBehaviour1PublicImTeGaTeObBuObStBuInUnique;
+using UiSafetyFeatureToggle = MonoBehaviourPublicIPointerEnterHandlerIEventSystemHandlerIPointerClickHandlerObStCoToCoStImRaCoStUnique;
+
 [assembly: MelonGame("VRChat", "VRChat")]
-[assembly: MelonInfo(typeof(DBSMod), "Dynamic Bones Safety", "2.1.5", "Fenrix")]
+[assembly: MelonInfo(typeof(DBSMod), "Dynamic Bones Safety", "2.2.0", "Fenrix, lil-fluff")]
 
 namespace DynamicBonesSafety
 {
